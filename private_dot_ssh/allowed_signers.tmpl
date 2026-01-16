@@ -1,0 +1,3 @@
+{{ range .git.users -}}
+{{ .email }} {{ onepasswordRead .opRef }}
+{{ end -}}

@@ -1,0 +1,31 @@
+#!/bin/bash
+# chezmoi:template:left-delimiter="#{" right-delimiter="}#"
+# hash: #{ include ".chezmoidata.yaml" | sha256sum }#
+
+set -e
+
+#{- range .git.users }#
+
+# Generate config for #{ .id }#
+pubkey=$(op read "#{ .opRef }#")
+
+cat > ~/.config/git/config-#{ .id }# << EOF
+[user]
+    name = "#{ .name }#"
+    email = #{ .email }#
+    signingkey = #{ .sshKey }#
+
+[core]
+    sshCommand = ssh -o IdentityFile=#{ .sshKey }# -o IdentitiesOnly=yes
+
+[gpg "ssh"]
+    allowedSignersFile = ~/.ssh/allowed_signers
+EOF
+
+# Write the public key file
+echo "$pubkey" > #{ .sshKey }#
+chmod 644 #{ .sshKey }#
+
+#{- end }#
+
+echo "Git user configs generated successfully"

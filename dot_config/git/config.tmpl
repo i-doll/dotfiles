@@ -1,0 +1,26 @@
+[init]
+    defaultBranch = main
+
+[gpg]
+    format = ssh
+
+[commit]
+    gpgsign = true
+
+[alias]
+  st      = status --branch
+  cm      = commit -v
+  ad      = add -p
+[rebase]
+  autostash = true
+[push]
+  default = simple
+  autoSetupRemote = true
+[pull]
+  rebase = true
+  autostash = true
+{{- range .git.users }}
+
+[includeIf "hasconfig:remote.*.url:*:{{ .id }}/**"]
+    path = ~/.config/git/config-{{ .id }}
+{{- end }}
