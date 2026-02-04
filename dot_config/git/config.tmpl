@@ -22,8 +22,13 @@
 [pull]
   rebase = true
   autostash = true
-{{- range .git.users }}
+{{- range $user := .git.users }}
 
-[includeIf "hasconfig:remote.*.url:*:{{ .id }}/**"]
-    path = ~/.config/git/config-{{ .id }}
+[includeIf "hasconfig:remote.*.url:*:{{ $user.id }}/**"]
+    path = ~/.config/git/config-{{ $user.id }}
+{{- if hasKey $user "orgs" }}{{ range $user.orgs }}
+
+[includeIf "hasconfig:remote.*.url:*:{{ . }}/**"]
+    path = ~/.config/git/config-{{ $user.id }}
+{{- end }}{{ end }}
 {{- end }}

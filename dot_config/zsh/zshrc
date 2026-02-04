@@ -11,8 +11,10 @@ source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source ~/.config/zsh/utilities/path.zsh
+source ~/.config/zsh/utilities/env.zsh
 source ~/.config/zsh/aliases.zsh
+source ~/.config/zsh/tools/brew.sh
 source ~/.config/zsh/tools/mise.zsh
 
-
 prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/.npm-global/bin"
