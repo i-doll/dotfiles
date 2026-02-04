@@ -5,7 +5,11 @@
     format = ssh
 
 [gpg "ssh"]
-    program = {{ output "bash" "-c" "command -v op-ssh-sign 2>/dev/null || ls /opt/1Password/op-ssh-sign /Applications/1Password.app/Contents/MacOS/op-ssh-sign 2>/dev/null | head -1" | trim }}
+{{- if eq .chezmoi.os "darwin" }}
+    program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+{{- else }}
+    program = /opt/1Password/op-ssh-sign
+{{- end }}
 
 [commit]
     gpgsign = true

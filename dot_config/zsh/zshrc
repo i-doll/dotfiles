@@ -1,22 +1,98 @@
 # vim: ft=zsh
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+
+# --- p10k instant prompt (MUST be first) ---
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-source /usr/share/cachyos-zsh-config/cachyos-config.zsh
+# --- Zinit bootstrap ---
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+if [[ ! -d "$ZINIT_HOME" ]]; then
+  mkdir -p "$(dirname "$ZINIT_HOME")"
+  git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+fi
+source "${ZINIT_HOME}/zinit.zsh"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# --- Powerlevel10k (synchronous — cannot be turbo-loaded) ---
+zinit ice depth=1
+zinit light romkatv/powerlevel10k
 
+# --- OMZ plugins via zinit snippets (turbo-loaded) ---
+# git.zsh library needed by the git plugin for git_current_branch etc.
+zinit ice wait lucid
+zinit snippet OMZL::git.zsh
+
+zinit ice wait lucid
+zinit snippet OMZP::git
+
+zinit ice wait lucid
+zinit snippet OMZP::fzf
+
+zinit ice wait lucid
+zinit snippet OMZP::extract
+
+# --- Third-party plugins (turbo-loaded) ---
+zinit ice wait lucid atinit="zicompinit; zicdreplay"
+zinit light zsh-users/zsh-syntax-highlighting
+
+zinit ice wait lucid atload="_zsh_autosuggest_start"
+zinit light zsh-users/zsh-autosuggestions
+
+zinit ice wait lucid atload="
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+"
+zinit light zsh-users/zsh-history-substring-search
+
+# --- Shell options (replaces OMZ libraries) ---
+setopt correct_all
+setopt auto_menu complete_in_word always_to_end
+
+# --- History ---
+HISTFILE="${HOME}/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history hist_expire_dups_first hist_ignore_dups
+setopt hist_ignore_space hist_verify share_history
+export HISTORY_IGNORE="(&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
+
+# --- Completion ---
+expand-or-complete-with-dots() {
+  printf '\e[31m...\e[0m'
+  zle expand-or-complete
+  zle redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey -M emacs "^I" expand-or-complete-with-dots
+bindkey -M viins "^I" expand-or-complete-with-dots
+bindkey -M vicmd "^I" expand-or-complete-with-dots
+
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+
+# --- Man page colors ---
+export LESS_TERMCAP_md="$(tput bold 2>/dev/null; tput setaf 2 2>/dev/null)"
+export LESS_TERMCAP_me="$(tput sgr0 2>/dev/null)"
+
+# --- Source modular configs ---
 source ~/.config/zsh/utilities/path.zsh
 source ~/.config/zsh/utilities/env.zsh
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/tools/brew.zsh
 source ~/.config/zsh/tools/mise.zsh
 
+# --- Platform-specific ---
+[[ -f /etc/arch-release ]] && source ~/.config/zsh/platform/arch.zsh
+
+# --- PATH ---
 prepend_path "$HOME/.local/bin"
 prepend_path "$HOME/.npm-global/bin"
 prepend_path "$HOME/.cargo/bin"
+
+# --- p10k config (MUST be last) ---
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
