@@ -1,5 +1,10 @@
 # vim: ft=zsh
 
+bindkey ' ' magic-space
+
+bindkey '^z' undo
+bindkey '^y' redo
+
 # --- Key bindings (Home / End / Delete) ---
 typeset -g -A key
 key[Home]="${terminfo[khome]}"
