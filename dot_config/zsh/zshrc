@@ -86,6 +86,7 @@ source ~/.config/zsh/utilities/env.zsh
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/tools/brew.zsh
 source ~/.config/zsh/tools/mise.zsh
+source ~/.config/zsh/tools/worktrunks.zsh
 
 # --- Platform-specific ---
 [[ -f /etc/arch-release ]] && source ~/.config/zsh/platform/arch.zsh
