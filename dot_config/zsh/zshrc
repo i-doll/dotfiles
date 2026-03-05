@@ -75,6 +75,11 @@ zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache"
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
 
+# --- Open buffer line in editor ---
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line
+
 # --- Man page colors ---
 export LESS_TERMCAP_md="$(tput bold 2>/dev/null; tput setaf 2 2>/dev/null)"
 export LESS_TERMCAP_me="$(tput sgr0 2>/dev/null)"
