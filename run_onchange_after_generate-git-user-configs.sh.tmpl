@@ -24,7 +24,7 @@ EOF
 
 # Write the public key file
 echo "$pubkey" > #{ .sshKey }#
-chmod 644 #{ .sshKey }#
+chmod 600 #{ .sshKey }#
 
 #{- end }#
 
