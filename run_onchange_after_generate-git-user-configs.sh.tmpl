@@ -7,7 +7,7 @@ set -e
 #{- range .git.users }#
 
 # Generate config for #{ .id }#
-pubkey=$(op read "#{ .opRef }#")
+pubkey=$(op read --account "#{ .opAccount }#" "#{ .opRef }#")
 
 cat > ~/.config/git/config-#{ .id }# << EOF
 [user]
