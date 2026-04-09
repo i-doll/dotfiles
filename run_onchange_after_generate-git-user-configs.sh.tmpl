@@ -28,6 +28,33 @@ chmod 600 #{ .sshKey }#
 
 #{- end }#
 
+#{- range .git.users }#
+#{- if hasKey . "orgs" }#
+#{- range .orgs }#
+#{- if hasKey . "signing" }#
+#{- if hasKey .signing "keyid" }#
+
+# Generate signing config for org #{ .name }#
+cat > ~/.config/git/config-#{ .name }# << EOF
+[gpg]
+    format = #{ .signing.mode }#
+[user]
+    signingkey = #{ .signing.keyid }#
+EOF
+#{- else }#
+
+# Generate signing config for org #{ .name }#
+cat > ~/.config/git/config-#{ .name }# << EOF
+[gpg]
+    format = #{ .signing.mode }#
+EOF
+
+#{- end }#
+#{- end }#
+#{- end }#
+#{- end }#
+#{- end }#
+
 echo "Git user configs generated successfully"
 
 # vim: ft=sh
