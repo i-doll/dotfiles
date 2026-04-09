@@ -68,7 +68,12 @@ bindkey -M viins "^I" expand-or-complete-with-dots
 bindkey -M vicmd "^I" expand-or-complete-with-dots
 
 autoload -Uz compinit
-compinit
+# Only regenerate compdump once per day; skip compaudit for speed
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 zstyle ':completion:*' menu select
 zstyle ':completion:*' use-cache yes
