@@ -7,17 +7,17 @@ Each entry under `git.users` represents one identity (personal, work, etc.). che
 ```yml
 git:
   users:
-    - id: i-doll                         # GitHub/GitLab username; used in includeIf and config filenames
-      name: "Amalthea Skydancer"         # Git commit author name
-      email: amalthea@faen.dev           # Git commit author email; also written to allowed_signers
-      opAccount: my.1password.com        # 1Password account shorthand (passed to `op read --account`)
-      opRef: "op://Thea/id_thea/public key"  # 1Password secret reference for the SSH public key
-      sshKey: ~/.ssh/id_thea.pub         # Path where the public key will be written on disk
-      orgs:                              # Optional: GitHub orgs/users whose remotes use this identity
-        - name: noteban                  # Org/user name; matched in remote URLs via includeIf
-          signing:                       # Optional: override signing for this org's repos
-            mode: ssh                   # GPG format: "ssh" or "gpg"
-            keyid: ~/.ssh/id_thea.pub   # Signing key; omit to inherit the user-level sshKey
+    - id: i-doll                              # GitHub/GitLab username; used in includeIf and config filenames
+      name: "Amalthea Skydancer"              # Git commit author name
+      email: amalthea@faen.dev                # Git commit author email; also written to allowed_signers
+      opAccount: my.1password.com             # 1Password account shorthand (passed to `op read --account`)
+      opRef: "op://Thea/id_thea/public key"   # 1Password secret reference for the SSH public key
+      sshKey: ~/.ssh/id_thea.pub              # Path where the public key will be written on disk
+      orgs:                                   # Optional: GitHub orgs/users whose remotes use this identity
+        - name: noteban                       # Org/user name; matched in remote URLs via includeIf
+          signing:                            # Optional: override signing for this org's repos
+            mode: ssh                         # GPG format: "ssh" or "openpgp"
+            keyid: ~/.ssh/id_thea.pub         # Signing key; omit to inherit the user-level sshKey
 ```
 
 ### Field reference
