@@ -4,7 +4,10 @@ import type { FinickyConfig, BrowserSpecification } from "/Applications/Finicky.
 const personal = { name: "Helium", profile: "Personal" } satisfies BrowserSpecification;
 const work = { name: "Helium", profile: "Work" } satisfies BrowserSpecification;
 
-{{- $work := .finicky.work | default dict }}
+{{- $work := dict }}
+{{- if hasKey . "finicky" }}
+{{- $work = (.finicky.work | default dict) }}
+{{- end }}
 const workOpeners = new Set<string>({{ $work.openers | default list | toJson }});
 const workHosts = new Set<string>({{ $work.hosts | default list | toJson }});
 const workGithubPaths: string[] = {{ $work.githubPaths | default list | toJson }};

@@ -61,4 +61,4 @@ finicky:
 | `hosts` | no | Exact-match URL hosts (not suffix — use the full hostname). |
 | `githubPaths` | no | Substrings matched against the URL path on any `*.github.com` host. Typically GitHub org or user slugs. |
 
-All three fields default to empty lists, so omitting `finicky` entirely is fine on machines where you don't need work routing.
+All three fields default to empty lists, so omitting `finicky` entirely is fine on machines where you don't need work routing. The file is also ignored outside macOS, so `~/.finicky.ts` is only managed on Darwin targets.
