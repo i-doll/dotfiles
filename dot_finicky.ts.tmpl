@@ -1,0 +1,30 @@
+// ~/.finicky.ts
+import type { FinickyConfig, BrowserSpecification } from "/Applications/Finicky.app/Contents/Resources/finicky.d.ts";
+
+const personal = { name: "Helium", profile: "Personal" } satisfies BrowserSpecification;
+const work = { name: "Helium", profile: "Work" } satisfies BrowserSpecification;
+
+{{- $work := .finicky.work | default dict }}
+const workOpeners = new Set<string>({{ $work.openers | default list | toJson }});
+const workHosts = new Set<string>({{ $work.hosts | default list | toJson }});
+const workGithubPaths: string[] = {{ $work.githubPaths | default list | toJson }};
+
+export default {
+  defaultBrowser: personal,
+  handlers: [
+    {
+      match: (_url, { opener }) => opener ? workOpeners.has(opener.name) : false,
+      browser: work,
+    },
+    {
+      match: (url) => workHosts.has(url.host),
+      browser: work,
+    },
+    {
+      match: (url) =>
+        url.host.endsWith("github.com") &&
+        workGithubPaths.some((p) => url.pathname.includes(p)),
+      browser: work,
+    },
+  ],
+} satisfies FinickyConfig;
