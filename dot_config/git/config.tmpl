@@ -27,6 +27,19 @@
   rebase = true
   autostash = true
 {{- range $user := .git.users }}
+{{- $paths := list $user.id }}
+{{- if hasKey $user "orgs" }}
+{{- range $user.orgs }}
+{{- $paths = append $paths .name }}
+{{- end }}
+{{- end }}
+{{- range $path := $paths }}
+
+[url "git@github-{{ $user.id }}:{{ $path }}/"]
+    insteadOf = git@github.com:{{ $path }}/
+    insteadOf = ssh://git@github.com/{{ $path }}/
+    insteadOf = https://github.com/{{ $path }}/
+{{- end }}
 
 [includeIf "hasconfig:remote.*.url:*:{{ $user.id }}/**"]
     path = ~/.config/git/config-{{ $user.id }}

@@ -15,9 +15,6 @@ cat > ~/.config/git/config-#{ .id }# << EOF
     email = #{ .email }#
     signingkey = #{ .sshKey }#
 
-[core]
-    sshCommand = ssh -o IdentityFile=#{ .sshKey }# -o IdentitiesOnly=yes
-
 [gpg "ssh"]
     allowedSignersFile = ~/.ssh/allowed_signers
 EOF
