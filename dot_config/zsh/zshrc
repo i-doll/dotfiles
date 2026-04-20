@@ -98,7 +98,6 @@ source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/tools/brew.zsh
 source ~/.config/zsh/tools/mise.zsh
 source ~/.config/zsh/tools/pnpm.zsh
-source ~/.config/zsh/tools/worktrunk.zsh
 source ~/.config/zsh/tools/auto-activate-python-env.zsh
 
 # --- Platform-specific ---
