@@ -1,0 +1,11 @@
+theme = Catppuccin Mocha
+font-family = CaskaydiaMono Nerd Font Mono
+
+# Prevent apps (less, man, pagers) from enabling DEC mode 1007 alternate-scroll,
+# which translates wheel events into ^[[A/B/C/D arrow-key escapes and leaks
+# them into scrollback as literal text.
+mouse-reporting = false
+
+# Runtime escape hatch: re-enable mouse for TUIs that need it (nvim, lazygit,
+# fzf, tmux). `super` is Cmd on macOS and the Super/Meta key on Linux.
+keybind = super+shift+m=toggle_mouse_reporting
