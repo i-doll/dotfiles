@@ -32,9 +32,28 @@ zinit ice wait lucid
 zinit snippet OMZP::extract
 
 # --- Third-party plugins (turbo-loaded) ---
+# Pre-seed ZSH_HIGHLIGHT_HIGHLIGHTERS with the default `main` highlighter.
+# Without this, any `+=(pattern)` appends that happen before zsh-syntax-
+# highlighting loads (e.g. from forge's plugin) would leave the array as
+# just `(pattern)`, silently disabling default syntax colouring.
+typeset -ga ZSH_HIGHLIGHT_HIGHLIGHTERS
+[[ ${#ZSH_HIGHLIGHT_HIGHLIGHTERS} -eq 0 ]] && ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+# zsh-syntax-highlighting's pattern highlighter expects ZSH_HIGHLIGHT_PATTERNS
+# to be an associative array; if forge's plugin appends to it before the
+# highlighter has declared it, zsh implicitly creates it as a regular
+# indexed array, causing `${(k)ZSH_HIGHLIGHT_PATTERNS}` iteration to yield
+# integer indices instead of patterns — so forge's `:cmd` colouring never
+# matches and `main`'s "unknown-token" red wins. Declaring it up front fixes
+# the type.
+typeset -gA ZSH_HIGHLIGHT_PATTERNS
 zinit ice wait lucid atinit="zicompinit; zicdreplay"
 zinit light zsh-users/zsh-syntax-highlighting
 
+# Pre-register forge's custom Enter widget so that when zsh-autosuggestions
+# turbo-loads it wraps `forge-accept-line` too, clearing the suggestion on
+# Enter just like it does for the default `accept-line`.
+typeset -ga ZSH_AUTOSUGGEST_CLEAR_WIDGETS
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(forge-accept-line)
 zinit ice wait lucid atload="_zsh_autosuggest_start"
 zinit light zsh-users/zsh-autosuggestions
 
@@ -47,6 +66,10 @@ zinit light zsh-users/zsh-history-substring-search
 # --- Shell options (replaces OMZ libraries) ---
 setopt correct_all
 setopt auto_menu complete_in_word always_to_end
+# extended_glob is required for zsh-syntax-highlighting's `pattern` highlighter
+# to match forge's `ZSH_HIGHLIGHT_PATTERNS` entries (they use `(#s)` / `#`),
+# which is what colours `:model`, `:conversation`, etc. yellow instead of red.
+setopt extended_glob
 
 # --- History ---
 HISTFILE="${HOME}/.zsh_history"
@@ -94,20 +117,25 @@ source ~/.config/zsh/utilities/add-zsh-hook.zsh
 source ~/.config/zsh/utilities/keybindings.zsh
 source ~/.config/zsh/utilities/path.zsh
 source ~/.config/zsh/utilities/env.zsh
+
+# --- PATH (must come before any tool plugin that probes for its binary) ---
+prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/.npm-global/bin"
+prepend_path "$HOME/.cargo/bin"
+
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/tools/brew.zsh
 source ~/.config/zsh/tools/mise.zsh
 source ~/.config/zsh/tools/pnpm.zsh
 source ~/.config/zsh/tools/auto-activate-python-env.zsh
+# Forge shell integration — sourced synchronously so its `:model`,
+# `:conversation`, etc. widgets are bound before the first prompt is drawn.
+# The file short-circuits internally when the `forge` binary is absent, so
+# this remains portable across machines without forge installed.
 source ~/.config/zsh/tools/forge.zsh
 
 # --- Platform-specific ---
 [[ -f /etc/arch-release ]] && source ~/.config/zsh/platform/arch.zsh
-
-# --- PATH ---
-prepend_path "$HOME/.local/bin"
-prepend_path "$HOME/.npm-global/bin"
-prepend_path "$HOME/.cargo/bin"
 
 # --- p10k config (MUST be last) ---
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

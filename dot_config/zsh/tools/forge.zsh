@@ -39,13 +39,22 @@ _forge_plugin_self_sync() {
     ' "$zshrc") || return 0
     [[ -n $block ]] || return 0
 
-    # Figure out which files to rewrite: always the live plugin file,
-    # and the chezmoi source if this file is managed by chezmoi.
+    # Figure out which files to rewrite. The file may be sourced directly or
+    # via a zinit snippet cache, so we assemble the full set of locations that
+    # all need to stay in sync:
+    #   1. $self                         — the actually-sourced file.
+    #   2. $canonical                    — ~/.config/zsh/tools/forge.zsh
+    #                                      (the chezmoi target; differs from
+    #                                      $self when sourced from zinit's
+    #                                      snippet cache).
+    #   3. chezmoi source-path of (2)    — so chezmoi itself doesn't drift.
+    local canonical="${HOME}/.config/zsh/tools/forge.zsh"
     local -a targets=("$self")
+    [[ $self != $canonical && -f $canonical ]] && targets+=("$canonical")
     if command -v chezmoi >/dev/null 2>&1; then
         local src
-        src=$(chezmoi source-path "$self" 2>/dev/null)
-        [[ -n $src && -f $src && $src != $self ]] && targets+=("$src")
+        src=$(chezmoi source-path "$canonical" 2>/dev/null)
+        [[ -n $src && -f $src && ${targets[(Ie)$src]} -eq 0 ]] && targets+=("$src")
     fi
 
     # Write block to a tmp file so awk can read it (avoids newline issues with -v).
@@ -86,6 +95,16 @@ _forge_plugin_self_sync() {
 
 _forge_plugin_self_sync "${${(%):-%x}:A}"
 unfunction _forge_plugin_self_sync
+
+# Portability guard: if the forge binary isn't installed on this machine,
+# skip the managed block entirely. This keeps the dotfile portable and
+# prevents "command not found: forge" from leaking into zsh init output
+# (which would otherwise trip Powerlevel10k's instant-prompt warning).
+# Placed OUTSIDE the `--- forge-managed-* ---` markers so `forge zsh setup`
+# and the self-sync above never overwrite it.
+if ! command -v forge >/dev/null 2>&1; then
+    return 0
+fi
 
 # --- forge-managed-begin ---
 # >>> forge initialize >>>
