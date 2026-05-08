@@ -1,3 +1,6 @@
+## Planning vs. Exploration
+When asked to 'plan' a feature, propose an approach and discuss BEFORE launching autonomous codebase exploration with parallel agents. Ask the user if they want a quick discussion or deep-dive exploration first.
+
 ## Version control
  - When committing do not include "Co-Authored-by" or similar co authoring attributions
  - When starting a new task, check out main, pull the latest changes and create a new branch using feat/, chore/ etc. prefixes
@@ -51,3 +54,16 @@
 - **Simplicity First**: Make every change as simple as possible. Impact minimal code.
 - **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
 - **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
+
+## Testing & Commit Hygiene
+
+### Verification Before Committing
+After implementing changes: (1) run lint AND type-check (including any pipeline-specific second-pass like mypy), (2) run the full test suite, (3) verify all related files are staged in a single commit (no split commits for one logical change).
+
+## Security
+
+### Security-Sensitive UI
+When building UI for permissions, sharing, or delegation, default to hiding/disabling controls that could enable privilege escalation. Explicitly call out any checkbox/toggle that affects authorization in the PR description.
+
+## LSL Specifics
+Always apply llUnescapeURL to URL-encoded strings received from RLV/HTTP-in (including force-teleport commands and warning strings). Verify llLinksetData* edge cases: empty values, missing keys, and unprotected entries with non-empty passwords.
