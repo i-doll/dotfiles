@@ -18,3 +18,22 @@ Host github-{{ $user.id }}
 	IdentityFile {{ $user.sshKey }}
 	IdentitiesOnly yes
 {{ end }}
+{{ range $host := .ssh.hosts }}
+Host {{ $host.name }}
+	HostName {{ $host.hostname }}
+{{- if hasKey $host "user" }}
+	User {{ $host.user }}
+{{- end }}
+{{- if hasKey $host "identityFile" }}
+	IdentityFile {{ $host.identityFile }}
+{{- end }}
+{{- if and (hasKey $host "identitiesOnly") $host.identitiesOnly }}
+	IdentitiesOnly yes
+{{- end }}
+{{- if hasKey $host "port" }}
+	Port {{ $host.port }}
+{{- end }}
+{{- if hasKey $host "proxyJump" }}
+	ProxyJump {{ $host.proxyJump }}
+{{- end }}
+{{ end }}

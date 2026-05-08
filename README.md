@@ -38,6 +38,30 @@ git:
 | `orgs[].signing.mode` | yes (if signing present) | GPG format for this org: `ssh` or `gpg`. |
 | `orgs[].signing.keyid` | no | Signing key for this org. If omitted, only `[gpg] format` is overridden and the user-level key is inherited. |
 
+### `ssh.hosts`
+
+Each entry adds a `Host <name>` block to `~/.ssh/config`. Use this for internal/work hosts whose names shouldn't land in public history.
+
+```yml
+ssh:
+  hosts:
+    - name: worklog                          # Host alias used in `ssh worklog`
+      hostname: worklog-prod-1.hard.ware.fi  # Real hostname or IP
+      user: thoreriklie                      # Optional: SSH user
+      identityFile: ~/.ssh/id_work.pub       # Optional: key to use
+      identitiesOnly: true                   # Optional: only offer the key above
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `name` | yes | Alias for `Host <name>`. |
+| `hostname` | yes | Resolved `HostName`. |
+| `user` | no | `User` directive. |
+| `identityFile` | no | `IdentityFile` directive. |
+| `identitiesOnly` | no | Emits `IdentitiesOnly yes` when truthy. |
+| `port` | no | `Port` directive. |
+| `proxyJump` | no | `ProxyJump` directive. |
+
 ### `finicky.work`
 
 Drives `~/.finicky.ts` so the tracked template stays free of employer and customer names. Anything under `finicky.work` routes the matching URL to the `work` browser profile; everything else falls through to `personal`.
