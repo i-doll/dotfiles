@@ -62,6 +62,24 @@ ssh:
 | `port` | no | `Port` directive. |
 | `proxyJump` | no | `ProxyJump` directive. |
 
+### `onepassword.sshKeys`
+
+Drives `~/.config/1Password/ssh/agent.toml` so the 1Password SSH agent offers keys from the listed vaults (and optionally specific items) without committing vault names to public history. Order is preserved — entries higher in the list are offered to SSH servers first.
+
+```yml
+onepassword:
+  sshKeys:
+    - vault: Employee              # Offer every SSH key in this vault
+    - item: "My SSH Key"           # Offer only this specific item…
+      vault: "My Custom Vault"     # …from this vault
+    - vault: Thea
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `vault` | yes | 1Password vault name. Emits `vault = "<name>"`. |
+| `item` | no | 1Password item name. When set, emits `item = "<name>"` so only that item is offered (instead of every key in the vault). |
+
 ### `finicky.work`
 
 Drives `~/.finicky.ts` so the tracked template stays free of employer and customer names. Anything under `finicky.work` routes the matching URL to the `work` browser profile; everything else falls through to `personal`.
