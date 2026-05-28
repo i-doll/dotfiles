@@ -80,6 +80,25 @@ onepassword:
 | `vault` | yes | 1Password vault name. Emits `vault = "<name>"`. |
 | `item` | no | 1Password item name. When set, emits `item = "<name>"` so only that item is offered (instead of every key in the vault). |
 
+### `apple`
+
+Optional Apple Developer / App Store Connect API credentials, exported as env vars from `~/.config/zsh/utilities/env.zsh` for tools like `fastlane` and `xcrun altool`. The Key ID and Issuer ID aren't secrets (the `.p8` private key at `apiKeyPath` is), so they're safe to commit — but every field is optional and only emitted when set, so leaving the block empty on machines that don't need it is fine.
+
+```yml
+apple:
+  apiKey: "ABCDE12345"                                                       # App Store Connect API Key ID
+  apiIssuer: "00000000-0000-0000-0000-000000000000"                          # Issuer UUID
+  apiKeyPath: "$HOME/.appstoreconnect/private_keys/AuthKey_ABCDE12345.p8"    # Path to the .p8 private key on disk
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `apiKey` | no | Exported as `APPLE_API_KEY`. The Key ID shown in App Store Connect. |
+| `apiIssuer` | no | Exported as `APPLE_API_ISSUER`. The Issuer ID UUID from App Store Connect. |
+| `apiKeyPath` | no | Exported as `APPLE_API_KEY_PATH`. Filesystem path to the `.p8` private key. |
+
+Per-machine values typically live in `~/.config/chezmoi/chezmoi.yaml` under `data.apple` rather than the committed `.chezmoidata.yaml`, so the private-key filename stays local.
+
 ### `finicky.work`
 
 Drives `~/.finicky.ts` so the tracked template stays free of employer and customer names. Anything under `finicky.work` routes the matching URL to the `work` browser profile; everything else falls through to `personal`.
