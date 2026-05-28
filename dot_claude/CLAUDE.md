@@ -52,6 +52,9 @@ How I speak:
 - **No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
 - **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
 
+## Local environment hygiene
+Never delete the user's local dependency / build directories after running verification commands. This includes `.venv/`, `venv/`, `node_modules/`, `.terraform/` (and `.terraform.lock.hcl`), `target/`, `dist/`, `build/`, `__pycache__/`, `.gradle/`, language caches, etc. They're the user's working state and recreating them is slow churn that breaks parallel work. They're already gitignored so they don't affect commits. Only delete if the user explicitly asks, or ask the user if a stale cache is provably causing the bug being investigated (and explain why first). Applies to every repo
+
 ## Testing & Commit Hygiene
 
 ### Verification Before Committing
