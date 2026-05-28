@@ -133,6 +133,7 @@ source ~/.config/zsh/tools/auto-activate-python-env.zsh
 # The file short-circuits internally when the `forge` binary is absent, so
 # this remains portable across machines without forge installed.
 source ~/.config/zsh/tools/forge.zsh
+source ~/.config/zsh/tools/pmg.zsh
 
 # --- Platform-specific ---
 [[ -f /etc/arch-release ]] && source ~/.config/zsh/platform/arch.zsh
