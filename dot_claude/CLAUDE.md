@@ -23,6 +23,7 @@ How I speak:
  - Do not add "Co-Authored-by" or "Generated with Claude Code" attributions to commits or PR bodies
  - When starting a new task, check out main, pull the latest changes and create a new branch using feat/, chore/ etc. prefixes
  - When setting up a new repo, put tasks/todo.md in the .gitignore
+ - I use multiple GitHub accounts, with git identity routed by the `<user>` segment of a standard origin URL: `git@github.com:<user>/<repo>.git`. Before creating or initializing a repo for me: run `gh auth status` to see which account UIDs are available on this machine, ask me which one to use, then set `origin` to `git@github.com:<chosen-user>/<repo>.git` — the matching `<user>` is what selects the correct identity for commits/pushes.
 ## Workflow Orchestration
 
 ### 1. Plan When It Earns It
@@ -60,3 +61,7 @@ After implementing changes: (1) run lint AND type-check (including any pipeline-
 
 ### Security-Sensitive UI
 When building UI for permissions, sharing, or delegation, default to hiding/disabling controls that could enable privilege escalation. Explicitly call out any checkbox/toggle that affects authorization in the PR description.
+
+## Personal memory
+Persistent personal facts and preferences live in the imported file below (NOT chezmoi-managed — edit freely).
+@~/.claude/personal-memory.md
