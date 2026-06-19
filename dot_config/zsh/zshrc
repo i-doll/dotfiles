@@ -134,6 +134,30 @@ source ~/.config/zsh/tools/auto-activate-python-env.zsh
 # this remains portable across machines without forge installed.
 source ~/.config/zsh/tools/forge.zsh
 source ~/.config/zsh/tools/pmg.zsh
+# Must come after pmg.zsh: it overrides pmg's `pnpm` alias to inject the
+# GitHub Packages token (from 1Password) for install-type commands.
+source ~/.config/zsh/tools/pnpm-auth.zsh
+
+# --- Claude Code: trust a folder (the trust dialog is suppressed by IS_DEMO=1) ---
+# Usage: claude-trust [dir]   — marks dir (default: $PWD) trusted in ~/.claude.json.
+# Run it in a new repo before launching `claude` there, e.g.:  claude-trust && claude
+claude-trust() {
+  local dir="${1:-$PWD}"; dir="${dir:A}"
+  python3 - "$dir" <<'PY'
+import json, os, sys, tempfile
+p = os.path.expanduser("~/.claude.json")
+try:
+    d = json.load(open(p))
+except Exception as e:
+    sys.exit(f"claude-trust: cannot read ~/.claude.json: {e}")
+d.setdefault("projects", {}).setdefault(sys.argv[1], {})["hasTrustDialogAccepted"] = True
+fd, tmp = tempfile.mkstemp(dir=os.path.dirname(p))
+with os.fdopen(fd, "w") as f:
+    json.dump(d, f, indent=2)
+os.replace(tmp, p)
+print("✓ Claude now trusts:", sys.argv[1])
+PY
+}
 
 # --- Platform-specific ---
 [[ -f /etc/arch-release ]] && source ~/.config/zsh/platform/arch.zsh
