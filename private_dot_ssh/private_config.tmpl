@@ -11,6 +11,7 @@ Host *
 {{- else }}
 	IdentityAgent ~/.1password/agent.sock
 {{- end }}
+       SetEnv TERM=xterm-256color
 {{ range $user := .git.users }}
 Host github-{{ $user.id }}
 	HostName github.com
