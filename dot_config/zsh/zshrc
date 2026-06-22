@@ -137,6 +137,7 @@ source ~/.config/zsh/tools/pmg.zsh
 # Must come after pmg.zsh: it overrides pmg's `pnpm` alias to inject the
 # GitHub Packages token (from 1Password) for install-type commands.
 source ~/.config/zsh/tools/pnpm-auth.zsh
+source ~/.config/zsh/tools/op.zsh
 
 # --- Claude Code: trust a folder (the trust dialog is suppressed by IS_DEMO=1) ---
 # Usage: claude-trust [dir]   — marks dir (default: $PWD) trusted in ~/.claude.json.
