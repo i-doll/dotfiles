@@ -1,0 +1,31 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "IS_DEMO": "1",
+    "POSTHOG_LLMA_CC_ENABLED": "true",
+    "POSTHOG_HOST": "https://eu.i.posthog.com",
+    "POSTHOG_LLMA_PRIVACY_MODE": "true",
+    "POSTHOG_LLMA_DISTINCT_ID": "Five"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "github@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "coderabbit@claude-plugins-official": true,
+    "posthog@claude-plugins-official": true
+  },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
+  "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
+  "remoteControlAtStartup": false,
+  "skipAutoPermissionPrompt": true,
+  "agentPushNotifEnabled": true
+}
