@@ -26,6 +26,17 @@
 [pull]
   rebase = true
   autostash = true
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[lfs "customtransfer.xet"]
+	path = git-xet
+	args = transfer
+	concurrent = true
 {{- range $user := .git.users }}
 {{- $paths := list $user.id }}
 {{- if hasKey $user "orgs" }}
