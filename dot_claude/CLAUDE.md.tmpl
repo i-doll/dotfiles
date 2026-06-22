@@ -68,3 +68,6 @@ When building UI for permissions, sharing, or delegation, default to hiding/disa
 ## Personal memory
 Persistent personal facts and preferences live in the imported file below (NOT chezmoi-managed — edit freely).
 @~/.claude/personal-memory.md
+{{ if lookPath "rtk" }}
+@RTK.md
+{{ end -}}
