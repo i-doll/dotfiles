@@ -38,3 +38,9 @@ Host {{ $host.name }}
 	ProxyJump {{ $host.proxyJump }}
 {{- end }}
 {{ end }}
+{{- if hasKey .ssh "ssmProxy" }}{{ if .ssh.ssmProxy.enabled }}
+Host {{ .ssh.ssmProxy.hostPatterns }}
+  ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p' --region {{ .ssh.ssmProxy.region }} --profile {{ .ssh.ssmProxy.profile }}"
+  User {{ .ssh.ssmProxy.user }}
+  StrictHostKeyChecking accept-new
+{{ end }}{{ end -}}
